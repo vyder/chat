@@ -1,0 +1,32 @@
+{
+    "name": "Chat",
+    "description": "A NodeJS chat app. To be built into my future projects.",
+    "version": "0.0.1",
+    "author": "Vidur Murali <vidur.murali@gmail.com>",
+    "contributors": [],
+    "main": "server.js",
+    "engines": {
+        "node": "0.10.x"
+    },
+    "scripts": {
+        "start": "nodemon server.js",
+        "test": "istanbul cover _mocha -- -R spec"
+    },
+    "dependencies": {
+        "express": "3.4.8",
+        "socket.io": "0.9.16",
+        "underscore": "1.6.0"
+    },
+    "devDependencies": {
+        "nodemon": "1.0.15",
+        "mocha": "1.17.1",
+        "should": "3.1.2",
+        "supertest" : "0.9.0",
+        "istanbul": "0.2.4",
+        "socket.io-client": "0.9.16"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/vyder/chat"
+    }
+}

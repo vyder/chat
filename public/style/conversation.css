@@ -1,0 +1,74 @@
+body {
+    background-image: url('/img/subtle_freckles.png');
+    padding: 0px;
+    margin: 0px;
+}
+
+div#register {
+    width: 385px;
+    margin:0 auto;
+    margin-top: 200px;
+}
+
+div#username-wrapper {
+    margin-top: 50px;
+}
+
+div#container {
+    margin: 0px auto;
+    min-height: 100%;
+}
+
+div#messages {
+    padding: 20px;
+    padding-left: 70px;
+
+    font-size: 18px;
+    line-height: 1.72;
+
+    height: 78%;
+    overflow: scroll;
+}
+
+p.server_message {
+    color: gray;
+}
+
+p.user_message > span.delim {
+    color: gray;
+    font-weight: 300;
+    margin-left: 2px;
+    margin-right: 4px;
+}
+
+div#prompt-wrapper {
+    background-color: #DAF7EE;
+    color: #A7C0C4;
+
+    position: absolute;
+    bottom: 40px;
+
+    height: 80px;
+}
+div#prompt-wrapper > textarea#prompt {
+    border-radius: 0px;
+    resize: none;
+
+    height: 100%;
+    padding: 20px;
+
+    /* These three need to add up to .standard-width */
+    /*margin-left: 50px;*/
+    width: 600px;
+
+    font-size: 18px;
+    line-height: 1.72;
+}
+div#prompt-wrapper > textarea#prompt:focus {
+    /*border: none;
+    outline: none;*/
+}
+
+.standard-width {
+    width: 600px;
+}

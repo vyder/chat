@@ -1,0 +1,13 @@
+= vyder/chat
+
+A NodeJS chat app. To be built into my future projects.
+
+== It's alive!
+http://the-conversation.herokuapp.com/
+
+== Getting started:
+1. `npm install`
+2. `npm (start|test)`
+
+== TODO:
+Issues: https://github.com/vyder/chat/issues

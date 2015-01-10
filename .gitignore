@@ -1,0 +1,17 @@
+# Files
+.DS_Store
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+
+# Folders
+private/
+coverage/
+
+# NPM
+npm-debug.log
+node_modules

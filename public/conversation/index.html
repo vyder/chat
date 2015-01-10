@@ -1,0 +1,117 @@
+<html>
+    <head>
+        <title>Conversation</title>
+        <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="/lib/flat-ui/css/flat-ui.css">
+        <link rel="stylesheet" href="/style/flat-ui_overrides.css">
+        <link rel="stylesheet" href="/style/conversation.css">
+
+        <script type="text/javascript" src="/lib/underscore.js"></script>
+        <script type="text/javascript" src="/lib/jquery.js"></script>
+        <script type="text/javascript" src="/lib/mustache.js"></script>
+        <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+
+        <script type="text/template" id="userMessageTemplate">
+            <p class="user_message">
+                {{source}}<span class="delim">: </span>{{message}}
+            </p>
+        </script>
+        <script type="text/template" id="serverMessageTemplate">
+            <p class="server_message">{{message}}</p>
+        </script>
+        <script type="text/javascript">
+            // #TODO: Refactor this godawful mess
+            var socket = io.connect(window.location.origin);
+            var username = null;
+            var hasRegistered = false;
+
+            var createMessage = function(message, source) {
+                var message;
+                if( source === 'server' ) {
+                    var messageTemplate = $('#serverMessageTemplate').html();
+                    message = Mustache.to_html(messageTemplate, { message: message });
+                } else {
+                    var messageTemplate = $('#userMessageTemplate').html();
+                    message = Mustache.to_html(messageTemplate, { source: source, message: message });
+                }
+
+                return message;
+            };
+
+            var transitionUI = function() {
+                $('#register').fadeOut(function() {
+                    $('#container').show();
+                    $('#prompt').focus();
+                });
+            };
+            var register = function(name) {
+                username = name;
+                hasRegistered = true;
+                transitionUI();
+
+                socket.emit('register', { username: username });
+            };
+            var messageHandler = function(data) {
+                if( data.type === 'MSG' && hasRegistered ) {
+                    var messages = data.messages || [ data.message ];
+                    var messageBox = document.getElementById('messages');
+                    _.each(messages, function(message) {
+                        var messageElement = createMessage(message, data.source);
+                        $(messageBox).append(messageElement);
+                        $(messageBox).scrollTop($(messageBox).height());
+                    });
+                } else if( data.type === 'ACT' ) {
+                    if( data.success ) {
+                        register(data.username);
+                    }
+                }
+            };
+            socket.on('notify', messageHandler);
+
+            $(document).ready(function() {
+                $('#username').focus(function() {
+                    $('#username-wrapper').addClass('focus');
+                }).blur(function() {
+                    $('#username-wrapper').removeClass('focus');
+                }).keydown(function( event ) {
+                    if(event.keyCode === 13) {
+                        var name = $(this).val();
+                        socket.emit('can_register', { username: name });
+                    }
+                });
+                $('#username').focus();
+
+                // Setup Prompt Behavior
+                $('#prompt').keydown(function( event ) {
+
+                    // Send message when user hits 'enter'
+                    if(event.keyCode === 13) {
+                        var message = $(this).val();
+                        socket.emit('message', { type: 'MSG', message: message, source: username });
+
+                        $(this).val('');
+
+                        // Prevent event from bubbling up
+                        event.preventDefault();
+                    }
+                });
+             });
+        </script>
+    </head>
+    <body>
+        <div id="register">
+            <h4>Welcome to the conversation.</h4>
+            <h4>What's your name?</h4>
+            <div id="username-wrapper" class="input-group input-group-hg">
+                <span class="input-group-addon"><span class="fui-user"></span></span>
+                <input id="username" class="form-control" type="text" placeholder="Vidur">
+            </div>
+        </div>
+        <div id="container" class="standard-width" style="display:none;">
+            <div id="messages" class="standard-width"></div>
+            <div id="prompt-wrapper" class="standard-width">
+                <textarea name="prompt" id="prompt" class="form-control standard-width"></textarea>
+            </div>
+        </div>
+    </body>
+</html>
